@@ -37,3 +37,4 @@ Start.ng's foundational promise is **Good vibes. Good games. Built by the commun
 - **Guild Adventurer Pass**: Certified initiation card with hero handle, class archetype, trial score, and Share on X.
 - **Procedural Synthesizer Audio**: Web Audio API engine providing tactile sound cues with zero external audio assets.
 # Start-improvement
+# Start-improvement
