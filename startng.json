@@ -1,0 +1,10 @@
+{
+  "name": "guild-adventure",
+  "description": "An interactive, gamified onboarding adventure for Start.ng. Navigate the Quest Map, choose your character class, and awaken your profile theme.",
+  "leaderboard": {
+    "stats": [
+      { "key": "xp", "label": "Guild XP", "order": "highest" },
+      { "key": "trial_score", "label": "Trial Score", "order": "highest" }
+    ]
+  }
+}
