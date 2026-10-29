@@ -1,0 +1,577 @@
+/* ══════════════════════════════════════════════════════════════
+   CUSTOM CURSOR (Subtle green dot/leaf with fading trail)
+   Ignored on mobile / touch devices (@media (pointer: fine) only)
+══════════════════════════════════════════════════════════════ */
+@media (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor button,
+  body.has-custom-cursor a,
+  body.has-custom-cursor [role="button"],
+  body.has-custom-cursor input,
+  body.has-custom-cursor select,
+  body.has-custom-cursor textarea {
+    cursor: none !important;
+  }
+
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    background: var(--lime);
+    border: 1.5px solid var(--ink);
+    border-radius: 50% 0 50% 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    pointer-events: none;
+    z-index: 99999;
+    transition: width 0.16s ease, height 0.16s ease, transform 0.16s ease;
+  }
+
+  body.cursor-hover .cursor-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .cursor-trail-leaf {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99998;
+    width: 7px;
+    height: 7px;
+    background: var(--lime);
+    border: 1px solid var(--ink);
+    border-radius: 50% 0 50% 50%;
+    transform: translate(-50%, -50%) rotate(var(--rot, -45deg)) scale(1);
+    animation: leafFade 0.4s ease-out forwards;
+  }
+
+  @keyframes leafFade {
+    0% {
+      opacity: 0.65;
+      transform: translate(-50%, -50%) rotate(var(--rot, -45deg)) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(calc(var(--rot, -45deg) + 30deg)) scale(0.25);
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-trail-leaf {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-trail-leaf {
+    display: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ARCADE SLOT MACHINE ROULETTE COMPONENT
+══════════════════════════════════════════════════════════════ */
+.roulette-section {
+  margin: 32px 0;
+}
+
+.machine-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.slot-cabinet {
+  width: 100%;
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 4px 6px 0 var(--ink);
+  position: relative;
+  z-index: 2;
+}
+
+.cabinet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.cabinet-title {
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jackpot-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  background: var(--lime);
+  color: var(--on-lime);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--ink);
+  font-weight: 700;
+}
+
+/* Mechanical cylinder window */
+.reels-stage {
+  background: var(--code-bg);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 8px;
+  display: grid;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Curved cylinder shadows */
+.reels-stage::before,
+.reels-stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 38px;
+  pointer-events: none;
+  z-index: 4;
+}
+.reels-stage::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--code-bg), transparent);
+}
+.reels-stage::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--code-bg), transparent);
+}
+
+.payline-marker {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 72px;
+  transform: translateY(-50%);
+  border-top: 1px dashed var(--line);
+  border-bottom: 1px dashed var(--line);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.reel-container {
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+.reel-strip {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.slot-item {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  user-select: none;
+}
+
+.slot-emoji {
+  font-size: 1.85rem;
+  flex-shrink: 0;
+}
+
+.slot-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.slot-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--on-solid);
+}
+
+.slot-meta {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--lime);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slot-tag {
+  background: var(--lime);
+  color: var(--on-lime);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* Mechanical pull lever (desktop fine pointer) */
+.lever-assembly {
+  position: absolute;
+  right: -36px;
+  top: 60px;
+  width: 36px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.lever-base {
+  width: 26px;
+  height: 26px;
+  background: var(--ink);
+  border-radius: 8px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border: 2px solid var(--lime);
+}
+
+.lever-shaft {
+  position: absolute;
+  bottom: 12px;
+  left: 9px;
+  width: 8px;
+  height: 90px;
+  background: var(--shimmer);
+  border-radius: 4px;
+  border: 1px solid var(--ink);
+  transform-origin: bottom center;
+  transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.lever-knob {
+  position: absolute;
+  top: -16px;
+  left: -8px;
+  width: 24px;
+  height: 24px;
+  background: var(--danger);
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  box-shadow: 0 2px 4px var(--scrim);
+}
+
+.lever-assembly.pulled .lever-shaft {
+  transform: rotate(38deg) scaleY(0.7);
+}
+
+/* Controls */
+.cabinet-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-spin {
+  flex: 2;
+  background: var(--ink);
+  color: var(--lime);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 3px 0 var(--solid-hover);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  user-select: none;
+}
+
+.btn-spin:hover:not(:disabled) {
+  background: var(--solid-hover);
+  transform: translateY(-1px);
+}
+
+.btn-spin:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--solid-hover);
+}
+
+.btn-spin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-sound-toggle {
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.btn-sound-toggle:hover {
+  border-color: var(--ink);
+}
+
+/* Landed match banner */
+.match-card {
+  margin-top: 16px;
+  background: var(--card);
+  border: 2px solid var(--lime);
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: matchPop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes matchPop {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.match-badge {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: var(--lime);
+  color: var(--on-lime);
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.match-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.match-avatar {
+  width: 54px;
+  height: 54px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.match-details h3 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin: 0 0 4px;
+}
+
+.match-details p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.match-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.btn-launch {
+  flex: 1;
+  background: var(--lime);
+  color: var(--on-lime);
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 11px 18px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 2px 2px 0 var(--ink);
+  text-decoration: none;
+}
+.btn-launch:hover {
+  transform: translateY(-1px);
+}
+
+/* History drawer */
+.roulette-history {
+  margin-top: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+}
+
+.history-title {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.history-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.history-chip {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.history-chip:hover {
+  border-color: var(--ink);
+}
+
+/* Quick spin trigger on games list */
+.roulette-quick-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--card);
+  border: 1.5px solid var(--ink);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  box-shadow: 3px 3px 0 var(--lime);
+}
+
+.roulette-quick-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.roulette-quick-icon {
+  font-size: 1.6rem;
+}
+
+.roulette-quick-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.roulette-quick-info p {
+  margin: 2px 0 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+/* Standalone roulette page wrapper */
+.roulette-page-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.roulette-hero-head {
+  text-align: center;
+}
+
+.roulette-hero-head h1 {
+  margin: 6px 0 10px;
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+  .lever-assembly {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .slot-name {
+    font-size: 1rem;
+  }
+  .slot-emoji {
+    font-size: 1.5rem;
+  }
+  .match-body {
+    flex-direction: column;
+    text-align: center;
+  }
+  .match-actions {
+    flex-direction: column;
+  }
+  .roulette-quick-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
