@@ -90,3 +90,4 @@ export default function CustomCursor() {
 
   return <div ref={dotRef} className="cursor-dot" aria-hidden="true" style={{ display: "none" }} />;
 }
+
