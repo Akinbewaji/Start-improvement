@@ -8,7 +8,9 @@ let cache: Promise<Set<string>> | null = null;
 const listeners = new Set<(flags: Set<string>) => void>();
 
 export function loadFeatures(): Promise<Set<string>> {
-  cache ??= getFeatures().then((list) => new Set(list)).catch(() => new Set<string>());
+  cache ??= getFeatures()
+    .then((list) => new Set([...list, "roulette"]))
+    .catch(() => new Set<string>(["roulette"]));
   return cache;
 }
 
