@@ -1,1666 +1,905 @@
 <!DOCTYPE html>
-<html lang="en" data-class="sorcerer">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>start.ng · The Hero's Awakening (Interactive Onboarding & Trial)</title>
-  <meta name="description" content="Embark on the Start.ng Guild Expedition. Choose your character class, customize your avatar, conquer the Trial of the Runes, and claim your Guild Adventurer Pass.">
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Start.ng · Arcade Game Roulette 🎰</title>
+  <meta name="description" content="Discover 180+ free Naija browser games with the Start.ng Arcade Slot Machine! Spin the reels, unlock game matches, and jump straight into action.">
+  <link rel="icon" type="image/svg+xml" href="https://start.ng/favicon.svg">
 
   <style>
-    /* =========================================================
-       DYNAMIC CLASS THEMES (CSS CUSTOM PROPERTIES)
-       ========================================================= */
+    /* ══════════════════════════════════════════════════════════════
+       DESIGN TOKENS (Strictly adhering to start.ng palette)
+    ══════════════════════════════════════════════════════════════ */
     :root {
-      --font-display: 'Outfit', sans-serif;
-      --font-body: 'Inter', -apple-system, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-      
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 22px;
-      --radius-full: 9999px;
-      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      --bg: #f6f5ee;
+      --card: #fffefa;
+      --ink: #292a23;
+      --muted: #6b6c63;
+      --line: #e4e2d6;
+      --lime: #d8fd71;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --on-solid: #fff;
+      --on-lime: #292a23;
+      --solid-hover: #000;
+      --gold: #f59e0b;
+      --gold-glow: rgba(245, 158, 11, 0.4);
+      --reel-bg: #191b15;
+      --reel-text: #e8ffe0;
+      --reel-line: #2d3027;
+      --shadow-card: 0 16px 40px rgba(41, 42, 35, 0.08);
+      color-scheme: light;
     }
 
-    /* Class: Code Sorcerer (Emerald / Cyan) */
-    html[data-class="sorcerer"] {
-      --bg-realm: #040d0a;
-      --surface-1: #091a14;
-      --surface-2: #102a20;
-      --surface-3: #163d2e;
-      --primary: #10b981;
-      --primary-light: #34d399;
-      --primary-glow: rgba(16, 185, 129, 0.35);
-      --accent: #06b6d4;
-      --accent-glow: rgba(6, 182, 212, 0.3);
-      --border: rgba(52, 211, 153, 0.22);
-      --border-bright: rgba(52, 211, 153, 0.65);
-      --class-name: 'Code Sorcerer';
-      --class-badge-bg: rgba(16, 185, 129, 0.15);
-      --class-tag: 'DEV / FRONTEND & BACKEND';
-      --aura-gradient: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 80%);
-      --rune-symbol: '⚡';
-      --rune-color: '#10b981';
+    :root[data-theme="dark"] {
+      --bg: #292a23;
+      --card: #33342c;
+      --ink: #f6f5ee;
+      --muted: #b0b1a6;
+      --line: #4a4b41;
+      --on-solid: #292a23;
+      --solid-hover: #fff;
+      --reel-bg: #141511;
+      --reel-text: #d8fd71;
+      --reel-line: #3f4236;
+      --shadow-card: 0 16px 40px rgba(0, 0, 0, 0.4);
+      color-scheme: dark;
     }
 
-    /* Class: Pixel Alchemist (Violet / Fuchsia) */
-    html[data-class="alchemist"] {
-      --bg-realm: #0d0614;
-      --surface-1: #190c27;
-      --surface-2: #27143c;
-      --surface-3: #391c57;
-      --primary: #c084fc;
-      --primary-light: #e879f9;
-      --primary-glow: rgba(192, 132, 252, 0.4);
-      --accent: #ec4899;
-      --accent-glow: rgba(236, 72, 153, 0.35);
-      --border: rgba(192, 132, 252, 0.24);
-      --border-bright: rgba(232, 121, 249, 0.7);
-      --class-name: 'Pixel Alchemist';
-      --class-badge-bg: rgba(192, 132, 252, 0.15);
-      --class-tag: 'UI/UX & PRODUCT DESIGN';
-      --aura-gradient: radial-gradient(circle at 50% 0%, rgba(192, 132, 252, 0.22) 0%, rgba(236, 72, 153, 0.09) 50%, transparent 80%);
-      --rune-symbol: '🎨';
-      --rune-color: '#c084fc';
-    }
-
-    /* Class: Realm Architect (Solar Amber / Gold) */
-    html[data-class="architect"] {
-      --bg-realm: #0e0a02;
-      --surface-1: #1f1505;
-      --surface-2: #30210a;
-      --surface-3: #483110;
-      --primary: #f59e0b;
-      --primary-light: #fbbf24;
-      --primary-glow: rgba(245, 158, 11, 0.4);
-      --accent: #f97316;
-      --accent-glow: rgba(249, 115, 22, 0.3);
-      --border: rgba(251, 191, 36, 0.25);
-      --border-bright: rgba(251, 191, 36, 0.7);
-      --class-name: 'Realm Architect';
-      --class-badge-bg: rgba(245, 158, 11, 0.15);
-      --class-tag: 'PRODUCT & STRATEGY';
-      --aura-gradient: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.2) 0%, rgba(249, 115, 22, 0.08) 50%, transparent 80%);
-      --rune-symbol: '👑';
-      --rune-color: '#f59e0b';
-    }
-
-    /* Class: Cyber Sentinel (Molten Crimson / Flame) */
-    html[data-class="sentinel"] {
-      --bg-realm: #0f0505;
-      --surface-1: #210a0a;
-      --surface-2: #331212;
-      --surface-3: #4d1c1c;
-      --primary: #ef4444;
-      --primary-light: #f87171;
-      --primary-glow: rgba(239, 68, 68, 0.4);
-      --accent: #ff0055;
-      --accent-glow: rgba(255, 0, 85, 0.35);
-      --border: rgba(239, 68, 68, 0.25);
-      --border-bright: rgba(248, 113, 113, 0.7);
-      --class-name: 'Cyber Sentinel';
-      --class-badge-bg: rgba(239, 68, 68, 0.15);
-      --class-tag: 'DEVOPS, CLOUD & SECURITY';
-      --aura-gradient: radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.22) 0%, rgba(255, 0, 85, 0.09) 50%, transparent 80%);
-      --rune-symbol: '🛡️';
-      --rune-color: '#ef4444';
-    }
-
-    /* Class: Data Oracle (Cosmic Indigo / Electric Azure) */
-    html[data-class="oracle"] {
-      --bg-realm: #040612;
-      --surface-1: #0b1028;
-      --surface-2: #141c42;
-      --surface-3: #1e2a63;
-      --primary: #6366f1;
-      --primary-light: #818cf8;
-      --primary-glow: rgba(99, 102, 241, 0.4);
-      --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.35);
-      --border: rgba(99, 102, 241, 0.25);
-      --border-bright: rgba(129, 140, 248, 0.7);
-      --class-name: 'Data Oracle';
-      --class-badge-bg: rgba(99, 102, 241, 0.15);
-      --class-tag: 'AI, ML & DATA SCIENCE';
-      --aura-gradient: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.22) 0%, rgba(56, 189, 248, 0.1) 50%, transparent 80%);
-      --rune-symbol: '🔮';
-      --rune-color: '#6366f1';
-    }
-
-    /* Reset & Canvas Ambient */
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    /* ══════════════════════════════════════════════════════════════
+       CUSTOM CURSOR DOT & FADING LEAF TRAIL (Desktop fine pointer only)
+    ══════════════════════════════════════════════════════════════ */
+    @media (pointer: fine) {
+      body, button, a, [role="button"], input, select, textarea {
+        cursor: none !important;
+      }
+
+      #custom-cursor-dot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        background: var(--lime);
+        border: 1.5px solid var(--ink);
+        border-radius: 50% 0 50% 50%; /* Playful subtle leaf/seed geometry */
+        transform: translate(-50%, -50%) rotate(-45deg);
+        pointer-events: none;
+        z-index: 99999;
+        transition: width 0.18s ease, height 0.18s ease, background 0.18s ease, transform 0.18s ease;
+        box-shadow: 0 0 8px rgba(216, 253, 113, 0.6);
+      }
+
+      body.cursor-hover #custom-cursor-dot {
+        width: 20px;
+        height: 20px;
+        background: var(--lime);
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(1.15);
+      }
+
+      .cursor-trail-leaf {
+        position: fixed;
+        pointer-events: none;
+        z-index: 99998;
+        width: 8px;
+        height: 8px;
+        background: var(--lime);
+        border: 1px solid var(--ink);
+        border-radius: 50% 0 50% 50%;
+        transform: translate(-50%, -50%) rotate(var(--rot, -45deg)) scale(1);
+        animation: leafFade 0.45s ease-out forwards;
+      }
+
+      @keyframes leafFade {
+        0% {
+          opacity: 0.75;
+          transform: translate(-50%, -50%) rotate(var(--rot, -45deg)) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) rotate(calc(var(--rot, -45deg) + 35deg)) scale(0.2);
+        }
+      }
+    }
+
+    @media (pointer: coarse) {
+      #custom-cursor-dot {
+        display: none !important;
+      }
+    }
+
     body {
-      background-color: var(--bg-realm);
-      color: #f1f5f9;
-      font-family: var(--font-body);
+      font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 24px 16px 48px;
       overflow-x: hidden;
-      position: relative;
-      transition: background-color 0.5s ease;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
-    .realm-bg {
-      position: fixed;
-      inset: 0;
-      background-image: 
-        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.04) 1px, transparent 0),
-        var(--aura-gradient);
-      background-size: 32px 32px, 100% 100%;
-      pointer-events: none;
-      z-index: 0;
-      transition: background 0.6s ease;
-    }
-
-    /* TOP REALM HUD */
-    .realm-hud {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 760px;
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Top Navigation bar */
+    header.nav {
+      width: 100%;
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      padding: 14px 28px;
-      background: rgba(10, 15, 25, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      transition: border-color 0.4s ease;
+      padding: 12px 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
 
-    .hud-left {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .startng-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .logo {
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.03em;
       text-decoration: none;
-      color: #fff;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .brand-sigil {
+    .logo-badge {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: var(--lime);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--on-lime);
+      border: 1px solid var(--ink);
+    }
+
+    .logo span {
+      color: var(--muted);
+    }
+
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .token-wallet {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .theme-toggle-btn {
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 10px;
       width: 36px;
       height: 36px;
-      border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 16px var(--primary-glow);
-      transition: var(--transition);
-    }
-
-    .brand-sigil svg {
-      width: 20px;
-      height: 20px;
-      fill: #fff;
-    }
-
-    .brand-text {
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .brand-text span {
-      color: var(--primary);
-      transition: color 0.4s ease;
-    }
-
-    .realm-crumb {
-      font-size: 0.78rem;
-      padding: 4px 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-full);
-      color: #94a3b8;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-mono);
-    }
-
-    .realm-crumb-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 8px var(--primary);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.3); }
-    }
-
-    .hud-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-connect-startng {
-      background: rgba(216, 253, 113, 0.12);
-      border: 1px solid rgba(216, 253, 113, 0.35);
-      color: #d8fd71;
-      padding: 7px 14px;
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 700;
+      display: grid;
+      place-items: center;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: var(--transition);
-      font-family: var(--font-mono);
+      font-size: 1rem;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--ink);
     }
 
-    .btn-connect-startng:hover {
-      background: rgba(216, 253, 113, 0.25);
-      box-shadow: 0 0 16px rgba(216, 253, 113, 0.3);
-      transform: translateY(-1px);
-    }
-
-    .btn-sound {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #94a3b8;
-      padding: 7px 12px;
-      border-radius: var(--radius-full);
-      font-size: 0.78rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: var(--transition);
-      font-family: var(--font-mono);
-    }
-
-    .back-to-startng {
-      text-decoration: none;
-      color: #cbd5e1;
-      font-size: 0.84rem;
-      font-weight: 600;
-      padding: 7px 14px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: var(--transition);
-    }
-
-    .back-to-startng:hover {
-      background: var(--surface-2);
-      border-color: var(--primary);
-      color: #fff;
-    }
-
-    /* MAIN EXPEDITION WORKSPACE */
-    .expedition-container {
-      max-width: 1360px;
-      margin: 0 auto;
-      padding: 28px 24px 80px;
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
-
-    /* Hero Epic Banner */
-    .adventure-hero {
+    /* Header text */
+    .hero-heading {
       text-align: center;
-      padding: 16px 20px 8px;
+      margin-top: 8px;
     }
 
-    .adventure-hero .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: var(--radius-full);
+    .eyebrow {
+      font-family: var(--mono);
       font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
       text-transform: uppercase;
-      background: var(--class-badge-bg);
-      border: 1px solid var(--border);
-      color: var(--primary);
-      box-shadow: 0 0 20px var(--primary-glow);
-      margin-bottom: 12px;
-      font-family: var(--font-mono);
-      transition: var(--transition);
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
     }
 
-    .adventure-hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 5vw, 3.2rem);
+    h1 {
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
       font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 8px;
     }
 
-    .adventure-hero h1 mark {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      padding: 0 4px;
-    }
-
-    .adventure-hero p {
-      color: #94a3b8;
-      font-size: clamp(0.92rem, 2vw, 1.1rem);
-      max-width: 680px;
-      margin: 0 auto;
-      line-height: 1.55;
-    }
-
-    /* INTERACTIVE QUEST MAP */
-    .quest-map-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      transition: border-color 0.4s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .quest-map-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .quest-map-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .quest-map-title h2 {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .quest-map-title span {
-      font-size: 0.78rem;
-      color: var(--primary);
-      font-family: var(--font-mono);
-      font-weight: 600;
-    }
-
-    .xp-meter {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--surface-1);
-      padding: 6px 14px;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border);
-      font-size: 0.8rem;
-      font-family: var(--font-mono);
-    }
-
-    .xp-bar-wrap {
-      width: 130px;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius-full);
-      overflow: hidden;
-    }
-
-    .xp-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      border-radius: var(--radius-full);
-      width: 20%;
-      transition: width 0.5s ease;
-      box-shadow: 0 0 10px var(--primary-glow);
-    }
-
-    /* Quest Nodes Track */
-    .quest-nodes-track {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      position: relative;
-      gap: 12px;
-      padding: 8px 0;
-    }
-
-    .quest-nodes-track::before {
-      content: '';
-      position: absolute;
-      top: 34px;
-      left: 10%;
-      right: 10%;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.1);
-      z-index: 1;
-    }
-
-    .quest-nodes-track::after {
-      content: '';
-      position: absolute;
-      top: 34px;
-      left: 10%;
-      width: var(--progress-pct, 0%);
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      box-shadow: 0 0 12px var(--primary-glow);
-      z-index: 2;
-      transition: width 0.5s ease;
-    }
-
-    .quest-node {
-      position: relative;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      background: none;
-      border: none;
+    mark {
+      background: linear-gradient(transparent 62%, var(--lime) 62%, var(--lime) 92%, transparent 92%);
       color: inherit;
-      padding: 0;
-      transition: transform 0.2s ease;
+      padding: 0 0.08em;
     }
 
-    .quest-node:hover {
-      transform: translateY(-2px);
+    .lead {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 480px;
+      margin: 0 auto;
     }
 
-    .node-icon-ring {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--surface-1);
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 8px;
-      font-size: 1.25rem;
-      transition: var(--transition);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-
-    .quest-node.active .node-icon-ring {
-      border-color: var(--primary);
-      background: var(--surface-2);
-      box-shadow: 0 0 20px var(--primary-glow), inset 0 0 12px var(--primary-glow);
-      transform: scale(1.1);
-    }
-
-    .quest-node.completed .node-icon-ring {
-      background: var(--primary);
-      border-color: var(--primary-light);
-      color: #040d0a;
-      box-shadow: 0 0 14px var(--primary-glow);
-    }
-
-    .node-label {
-      font-family: var(--font-display);
-      font-size: 0.86rem;
-      font-weight: 700;
-      color: #cbd5e1;
-      margin-bottom: 2px;
-    }
-
-    .quest-node.active .node-label {
-      color: var(--primary);
-    }
-
-    .node-sub {
-      font-size: 0.72rem;
-      color: #64748b;
-      font-family: var(--font-mono);
-    }
-
-    @media (max-width: 860px) {
-      .quest-nodes-track {
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-      .quest-nodes-track::before,
-      .quest-nodes-track::after {
-        display: none;
-      }
-      .quest-node {
-        flex-direction: row;
-        gap: 14px;
-        text-align: left;
-        background: var(--surface-1);
-        padding: 10px 14px;
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border);
-      }
-      .node-icon-ring {
-        margin-bottom: 0;
-        width: 40px;
-        height: 40px;
-      }
-    }
-
-    /* DUAL-PANE WORKSPACE */
-    .stage-workspace {
-      display: grid;
-      grid-template-columns: 1.55fr 1fr;
-      gap: 26px;
-      align-items: start;
-    }
-
-    @media (max-width: 1024px) {
-      .stage-workspace {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .stage-card {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 30px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    /* ══════════════════════════════════════════════════════════════
+       THE ARCADE SLOT MACHINE
+    ══════════════════════════════════════════════════════════════ */
+    .machine-wrapper {
       position: relative;
-      transition: border-color 0.4s ease;
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      justify-content: center;
+      margin: 12px 0;
     }
 
-    .stage-header {
-      margin-bottom: 24px;
+    .slot-cabinet {
+      width: 100%;
+      background: var(--card);
+      border: 2px solid var(--ink);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 6px 8px 0 var(--ink), var(--shadow-card);
+      position: relative;
+      z-index: 2;
     }
 
-    .stage-chapter-tag {
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--primary);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .stage-title {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .stage-desc {
-      color: #94a3b8;
-      font-size: 0.94rem;
-      line-height: 1.55;
-    }
-
-    .stage-panel {
-      display: none;
-      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .stage-panel.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Form Inputs */
-    .field-group {
-      margin-bottom: 20px;
-    }
-
-    .field-label {
+    .cabinet-header {
       display: flex;
       justify-content: space-between;
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: #cbd5e1;
-      margin-bottom: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--line);
     }
 
-    .field-label span {
-      color: var(--primary);
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
+    .cabinet-title {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .field-input, .field-select, .field-textarea {
-      width: 100%;
-      background: var(--surface-2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      color: #fff;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      transition: var(--transition);
-      outline: none;
+    .jackpot-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      background: var(--lime);
+      color: var(--on-lime);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--ink);
+      font-weight: 700;
     }
 
-    .field-input:focus, .field-select:focus, .field-textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 16px var(--primary-glow);
-      background: var(--surface-3);
-    }
-
-    /* Class Selection Cards */
-    .class-cards-grid {
+    /* The Mechanical Reel Frame */
+    .reels-stage {
+      background: var(--reel-bg);
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      padding: 10px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
+      grid-template-columns: 1fr;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 8px 24px rgba(0, 0, 0, 0.7);
     }
 
-    .class-card {
-      background: var(--surface-2);
-      border: 2px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      cursor: pointer;
+    /* Gradient curvature shadows on top and bottom of cylinder */
+    .reels-stage::before,
+    .reels-stage::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 36px;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .reels-stage::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(10, 12, 8, 0.95), transparent);
+    }
+    .reels-stage::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(10, 12, 8, 0.95), transparent);
+    }
+
+    /* Horizontal payline tracker */
+    .payline-marker {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 72px;
+      transform: translateY(-50%);
+      border-top: 1px dashed rgba(216, 253, 113, 0.35);
+      border-bottom: 1px dashed rgba(216, 253, 113, 0.35);
+      pointer-events: none;
+      z-index: 3;
+      background: rgba(216, 253, 113, 0.03);
+    }
+
+    .reel-container {
+      height: 180px;
+      overflow: hidden;
       position: relative;
-      transition: var(--transition);
+    }
+
+    .reel-strip {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      will-change: transform;
+    }
+
+    .slot-item {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--reel-line);
       user-select: none;
     }
 
-    .class-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255, 255, 255, 0.25);
-      background: var(--surface-3);
+    .slot-emoji {
+      font-size: 2rem;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
     }
 
-    .class-card.selected {
-      border-color: var(--primary);
-      background: var(--surface-3);
-      box-shadow: 0 0 24px var(--primary-glow);
+    .slot-info {
+      flex: 1;
+      min-width: 0;
     }
 
-    .class-card-top {
+    .slot-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--reel-text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .slot-meta {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--lime);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slot-tag {
+      background: rgba(216, 253, 113, 0.15);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(216, 253, 113, 0.25);
+    }
+
+    /* THE MECHANICAL LEVER ARM (Right side of cabinet) */
+    .lever-assembly {
+      position: absolute;
+      right: -36px;
+      top: 60px;
+      width: 38px;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .lever-base {
+      width: 28px;
+      height: 28px;
+      background: var(--ink);
+      border-radius: 8px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border: 2px solid var(--lime);
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    }
+
+    .lever-shaft {
+      position: absolute;
+      bottom: 14px;
+      left: 10px;
+      width: 8px;
+      height: 90px;
+      background: linear-gradient(to right, #ccc, #fff, #999);
+      border-radius: 4px;
+      border: 1px solid var(--ink);
+      transform-origin: bottom center;
+      transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    }
+
+    .lever-knob {
+      position: absolute;
+      top: -16px;
+      left: -8px;
+      width: 24px;
+      height: 24px;
+      background: #c0392b;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), 0 3px 6px rgba(0,0,0,0.3);
+      transition: background 0.15s ease;
+    }
+
+    .lever-assembly:hover .lever-knob {
+      background: #e74c3c;
+    }
+
+    .lever-assembly.pulled .lever-shaft {
+      transform: rotate(38deg) scaleY(0.7);
+    }
+
+    /* Controls Panel */
+    .cabinet-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .btn-spin {
+      flex: 2;
+      background: var(--ink);
+      color: var(--lime);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 0 var(--solid-hover);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+      user-select: none;
+    }
+
+    .btn-spin:hover:not(:disabled) {
+      background: var(--solid-hover);
+      box-shadow: 0 5px 0 var(--solid-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-spin:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--solid-hover);
+    }
+
+    .btn-spin:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-sound-toggle {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: border-color 0.15s ease;
+    }
+    .btn-sound-toggle:hover {
+      border-color: var(--ink);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       MATCH CARD (Appears upon landing on a game)
+    ══════════════════════════════════════════════════════════════ */
+    .match-card {
+      width: 100%;
+      background: var(--card);
+      border: 2px solid var(--lime);
+      border-radius: 20px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 8px 24px rgba(216, 253, 113, 0.25);
+      animation: popIn 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.92) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .match-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .class-icon {
-      font-size: 1.8rem;
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.06);
+    .match-badge {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--lime);
+      color: var(--on-lime);
+      padding: 3px 10px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 6px;
     }
 
-    .class-pill {
-      font-size: 0.68rem;
-      font-family: var(--font-mono);
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
-      background: rgba(255, 255, 255, 0.06);
-      color: #94a3b8;
+    .match-body {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    .class-card.selected .class-pill {
-      background: var(--primary);
-      color: #000;
+    .match-avatar {
+      width: 60px;
+      height: 60px;
+      background: var(--bg);
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 2.2rem;
+      flex-shrink: 0;
     }
 
-    .class-name {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #fff;
+    .match-details h3 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
     }
 
-    .class-role {
-      font-size: 0.78rem;
-      color: #94a3b8;
+    .match-details p {
+      color: var(--muted);
+      font-size: 0.92rem;
       line-height: 1.4;
     }
 
-    .class-perks {
-      margin-top: auto;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 0.74rem;
-      font-family: var(--font-mono);
-      color: var(--primary);
-    }
-
-    /* Relic Selection */
-    .relics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .relic-btn {
-      background: var(--surface-2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition);
+    .match-actions {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: #e2e8f0;
-    }
-
-    .relic-btn:hover {
-      background: var(--surface-3);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .relic-btn.selected {
-      background: var(--surface-3);
-      border-color: var(--primary);
-      box-shadow: 0 0 16px var(--primary-glow);
-      color: #fff;
-    }
-
-    .relic-emoji {
-      font-size: 1.6rem;
-    }
-
-    .relic-name {
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    /* Avatar Customizer */
-    .avatar-customizer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    /* TRIAL OF THE RUNES (CANVAS MINI-GAME) */
-    .trial-box {
-      background: #000;
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 24px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
-    }
-
-    .trial-hud-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      font-family: var(--font-mono);
-      font-size: 0.84rem;
-    }
-
-    .trial-stat {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #cbd5e1;
-    }
-
-    .trial-stat b {
-      color: var(--primary);
-      font-size: 1.1rem;
-    }
-
-    #gameCanvas {
-      width: 100%;
-      height: 240px;
-      background: radial-gradient(circle at 50% 50%, var(--surface-2) 0%, #030706 100%);
-      border-radius: var(--radius-sm);
-      display: block;
-      cursor: crosshair;
-    }
-
-    .trial-controls-hint {
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.76rem;
-      color: #64748b;
-      font-family: var(--font-mono);
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .btn-trial-action {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      border: none;
-      color: #040d0a;
-      padding: 8px 18px;
-      border-radius: var(--radius-full);
-      font-weight: 700;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-trial-action:hover {
-      filter: brightness(1.1);
-      box-shadow: 0 0 16px var(--primary-glow);
-    }
-
-    /* STAGE FOOTER */
-    .stage-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .btn-prev {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #94a3b8;
-      padding: 11px 22px;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-prev:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-    }
-
-    .btn-next {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      border: none;
-      color: #040d0a;
-      padding: 11px 26px;
-      border-radius: var(--radius-md);
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 0 20px var(--primary-glow);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-next:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 28px var(--primary-glow);
-      filter: brightness(1.1);
-    }
-
-    /* RIGHT HUD: HERO GUILD CARD */
-    .hero-sheet-card {
-      position: sticky;
-      top: 88px;
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
-      transition: border-color 0.4s ease, box-shadow 0.4s ease;
-      overflow: hidden;
-    }
-
-    .hero-sheet-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
-    .sheet-title {
-      font-family: var(--font-display);
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #94a3b8;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sheet-tier-badge {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      background: var(--class-badge-bg);
-      border: 1px solid var(--border);
-      color: var(--primary);
-    }
-
-    .hero-avatar-box {
-      background: radial-gradient(circle at center, var(--surface-2) 0%, var(--surface-1) 80%);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
-      height: 170px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin-bottom: 18px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .avatar-canvas {
-      width: 95px;
-      height: 95px;
-      filter: drop-shadow(0 0 12px var(--primary-glow));
-    }
-
-    .avatar-level-chip {
-      position: absolute;
-      bottom: 10px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      color: var(--primary);
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: var(--radius-full);
-    }
-
-    .hero-meta-title {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-
-    .hero-meta-handle {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--primary);
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    .hero-stats-list {
-      display: flex;
-      flex-direction: column;
       gap: 10px;
-      margin-bottom: 18px;
-      background: var(--surface-2);
-      padding: 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 4px;
+      flex-wrap: wrap;
     }
 
-    .stat-row {
+    .btn-launch {
+      flex: 1;
+      background: var(--lime);
+      color: var(--on-lime);
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 2px 2px 0 var(--ink);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-launch:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .btn-share {
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .btn-share:hover {
+      border-color: var(--ink);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       DISCOVERED STATS & RECENT PICKS
+    ══════════════════════════════════════════════════════════════ */
+    .history-drawer {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 20px;
+    }
+
+    .drawer-title {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
-      font-size: 0.82rem;
     }
 
-    .stat-name {
-      color: #94a3b8;
-    }
-
-    .stat-val {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .hero-gear-preview {
-      margin-top: 14px;
-    }
-
-    .gear-title {
-      font-size: 0.76rem;
-      font-family: var(--font-mono);
-      color: #94a3b8;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .gear-chips {
+    .recent-chips {
       display: flex;
+      gap: 8px;
       flex-wrap: wrap;
+    }
+
+    .recent-chip {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.15s ease;
+    }
+    .recent-chip:hover {
+      border-color: var(--ink);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
       gap: 6px;
     }
-
-    .gear-chip {
-      font-size: 0.72rem;
-      background: var(--surface-3);
-      border: 1px solid var(--border);
-      color: #e2e8f0;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    /* INDUCTION PASS MODAL */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .pass-certificate {
-      background: var(--surface-1);
-      border: 2px solid var(--primary);
-      border-radius: var(--radius-lg);
-      max-width: 600px;
-      width: 100%;
-      padding: 34px;
-      text-align: center;
-      box-shadow: 0 0 60px var(--primary-glow);
-      position: relative;
-    }
-
-    .pass-sigil-stamp {
-      width: 68px;
-      height: 68px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      margin: 0 auto 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      box-shadow: 0 0 30px var(--primary-glow);
-    }
-
-    .pass-actions {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 22px;
-      flex-wrap: wrap;
-    }
-
-    .btn-share-x {
-      background: #000;
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 11px 22px;
-      border-radius: var(--radius-md);
+    footer a {
+      color: var(--ink);
       font-weight: 700;
-      font-size: 0.88rem;
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: var(--transition);
     }
 
-    .btn-share-x:hover {
-      background: #111;
-      border-color: #fff;
-      transform: translateY(-2px);
+    /* Sparkle Particle for Win */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      animation: sparkleFall 0.8s ease-out forwards;
+      font-size: 1.4rem;
+    }
+    @keyframes sparkleFall {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.3) rotate(var(--rot)); }
     }
 
-    .startng-footer {
-      text-align: center;
-      padding: 28px 20px;
-      color: #64748b;
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      z-index: 10;
-      position: relative;
-    }
-
-    .startng-footer a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .startng-footer a:hover {
-      text-decoration: underline;
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .lever-assembly { display: none; }
+      .slot-name { font-size: 1.1rem; }
+      .slot-emoji { font-size: 1.6rem; }
+      .match-body { flex-direction: column; text-align: center; }
+      .match-actions { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient Background Aura -->
-  <div class="realm-bg"></div>
-
-  <!-- TOP REALM HUD -->
-  <header class="realm-hud">
-    <div class="hud-left">
-      <a href="https://start.ng" class="startng-brand">
-        <div class="brand-sigil" id="brandSigil">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
-        <div class="brand-text">start<span>.ng</span></div>
-      </a>
-      <div class="realm-crumb">
-        <span class="realm-crumb-dot"></span>
-        <span id="realmGuildStatus">EXPEDITION ONBOARDING</span>
-      </div>
-    </div>
-
-    <div class="hud-right">
-      <button class="btn-connect-startng" id="btnConnectSync" title="Simulate or query live start.ng player session">
-        <span>⚡</span> <span id="connectLabel">Connect start.ng</span>
-      </button>
-      <button class="btn-sound" id="btnSoundToggle" title="Toggle Procedural Synthesizer Audio">
-        <span id="soundIcon">🔊</span> Audio: <span id="soundLabel">ON</span>
-      </button>
-      <a href="https://start.ng" class="back-to-startng">
-        ← Back to start.ng
-      </a>
-    </div>
-  </header>
-
-  <!-- MAIN EXPEDITION WORKSPACE -->
-  <main class="expedition-container">
+  <div class="container">
     
-    <!-- Hero Adventure Banner -->
-    <section class="adventure-hero">
-      <div class="badge">⚔️ HNG 15 · Guild Induction Expedition</div>
-      <h1>Awaken Your <mark id="heroClassDisplay">Code Sorcerer</mark></h1>
-      <p>Navigate the Quest Map, awaken your character class, customize your Start.ng avatar, conquer the Trial of the Runes, and claim your certified Guild Pass.</p>
-    </section>
+    <!-- Top Nav -->
+    <header class="nav">
+      <a href="https://start.ng/" class="logo">
+        <span class="logo-badge">S</span>
+        <b>start<span>.ng</span></b>
+      </a>
 
-    <!-- INTERACTIVE QUEST MAP -->
-    <section class="quest-map-card">
-      <div class="quest-map-header">
-        <div class="quest-map-title">
-          <h2>Path of Initiation</h2>
-          <span id="mapPhaseIndicator">PHASE 1 OF 5 // ORIGIN GATE</span>
+      <div class="nav-tools">
+        <div class="token-wallet" title="Arcade Tokens">
+          <span>🪙</span> <span id="token-count">100</span>
         </div>
-        <div class="xp-meter">
-          <span>XP METER</span>
-          <div class="xp-bar-wrap">
-            <div class="xp-bar-fill" id="xpProgressFill" style="width: 20%;"></div>
-          </div>
-          <span id="xpText">250 / 1000 XP</span>
-        </div>
+        <button class="theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle theme">
+          🌙
+        </button>
       </div>
+    </header>
 
-      <!-- 5-Waypoints Grid Track -->
-      <nav class="quest-nodes-track" id="questTrack" style="--progress-pct: 0%;">
-        <button class="quest-node active" data-step="1" id="node-1">
-          <div class="node-icon-ring">🚪</div>
-          <div class="node-label">Origin Gate</div>
-          <div class="node-sub">Identity & Soul</div>
-        </button>
+    <!-- Header Description -->
+    <div class="hero-heading">
+      <span class="eyebrow">Random Game Picker · 188+ Games</span>
+      <h1>Arcade <mark>Roulette</mark></h1>
+      <p class="lead">Can't decide what to play? Pull the lever or hit Spin to let the start.ng slot machine choose your next Naija browser game!</p>
+    </div>
 
-        <button class="quest-node" data-step="2" id="node-2">
-          <div class="node-icon-ring">⚡</div>
-          <div class="node-label">Class Awakening</div>
-          <div class="node-sub">Theme & Powers</div>
-        </button>
-
-        <button class="quest-node" data-step="3" id="node-3">
-          <div class="node-icon-ring">🗡️</div>
-          <div class="node-label">Talent Relics</div>
-          <div class="node-sub">Equip Starter Kit</div>
-        </button>
-
-        <button class="quest-node" data-step="4" id="node-4">
-          <div class="node-icon-ring">🎮</div>
-          <div class="node-label">Trial of Runes</div>
-          <div class="node-sub">Arcade Mini-Game</div>
-        </button>
-
-        <button class="quest-node" data-step="5" id="node-5">
-          <div class="node-icon-ring">📜</div>
-          <div class="node-label">The Guild Oath</div>
-          <div class="node-sub">Certified Pass</div>
-        </button>
-      </nav>
-    </section>
-
-    <!-- DUAL-PANE STAGE WORKSPACE -->
-    <div class="stage-workspace">
+    <!-- Machine Component -->
+    <div class="machine-wrapper">
       
-      <!-- LEFT: STAGE PANEL -->
-      <section class="stage-card">
-        
-        <!-- STEP 1: ORIGIN GATE -->
-        <div class="stage-panel active" id="stage-1">
-          <div class="stage-header">
-            <span class="stage-chapter-tag">Chapter I · The Threshold</span>
-            <h2 class="stage-title">Who Steps Through the Gate?</h2>
-            <p class="stage-desc">Tell the Guild scribes your explorer identity and community handles.</p>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="heroNameInput">
-              Hero Name / Character Handle
-              <span>REQUIRED</span>
-            </label>
-            <input type="text" id="heroNameInput" class="field-input" placeholder="e.g. Denise Vance" value="Denise Vance">
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="heroAccountInput">
-              Start.ng Account Tag (@handle)
-              <span>REALM ID</span>
-            </label>
-            <input type="text" id="heroAccountInput" class="field-input" placeholder="e.g. denise_vance" value="denise_vance">
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="heroGoalSelect">
-              Primary Guild Ambition
-              <span>QUEST FOCUS</span>
-            </label>
-            <select id="heroGoalSelect" class="field-select">
-              <option value="S-Tier Engineering & Open Source Bounty">S-Tier Engineering & Open Source Bounty</option>
-              <option value="Build Viral Naija Browser Games on start.ng">Build Viral Naija Browser Games on start.ng</option>
-              <option value="Survive All HNG Stages to Grand Finalist">Survive All HNG Stages to Grand Finalist</option>
-              <option value="Land Global Remote Tech Placement">Land Global Remote Tech Placement</option>
-            </select>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="heroOriginBio">
-              Explorer Motto / Origin Tale
-              <span>FLAVOR</span>
-            </label>
-            <textarea id="heroOriginBio" class="field-textarea" rows="2" placeholder="Tell your fellow guildmates your code philosophy...">Never sleep when the build is broken. Shipping clean code with zero rate limits.</textarea>
-          </div>
+      <!-- The Lever (on Desktop) -->
+      <div class="lever-assembly" id="lever-arm" title="Pull the lever!">
+        <div class="lever-shaft">
+          <div class="lever-knob"></div>
         </div>
-
-        <!-- STEP 2: CLASS AWAKENING -->
-        <div class="stage-panel" id="stage-2">
-          <div class="stage-header">
-            <span class="stage-chapter-tag">Chapter II · The Awakening</span>
-            <h2 class="stage-title">Choose Your Character Class</h2>
-            <p class="stage-desc">Your choice awakens distinct elemental auras, dynamic theme colors, and signature traits across the realm.</p>
-          </div>
-
-          <div class="class-cards-grid" id="classCardsWrap">
-            
-            <!-- Code Sorcerer -->
-            <div class="class-card selected" data-class-key="sorcerer">
-              <div class="class-card-top">
-                <div class="class-icon">🧙‍♂️</div>
-                <span class="class-pill">DEV</span>
-              </div>
-              <h3 class="class-name">Code Sorcerer</h3>
-              <p class="class-role">Weaves algorithms from the void, master of fullstack spells, state machines, and API conduits.</p>
-              <div class="class-perks">+35 Algorithmic Flow · 0ms Latency Focus</div>
-            </div>
-
-            <!-- Pixel Alchemist -->
-            <div class="class-card" data-class-key="alchemist">
-              <div class="class-card-top">
-                <div class="class-icon">🎨</div>
-                <span class="class-pill">DESIGN</span>
-              </div>
-              <h3 class="class-name">Pixel Alchemist</h3>
-              <p class="class-role">Transmutes rough ideas into radiant interfaces, master of Bezier runes and micro-interactions.</p>
-              <div class="class-perks">+40 Spatial Aesthetics · Color Wheel Vision</div>
-            </div>
-
-            <!-- Realm Architect -->
-            <div class="class-card" data-class-key="architect">
-              <div class="class-card-top">
-                <div class="class-icon">👑</div>
-                <span class="class-pill">PRODUCT</span>
-              </div>
-              <h3 class="class-name">Realm Architect</h3>
-              <p class="class-role">Orchestrates roadmaps, product vision, and user loops with laser clarity and unyielding prioritization.</p>
-              <div class="class-perks">+30 Strategic Clarity · Scope Creep Ward</div>
-            </div>
-
-            <!-- Cyber Sentinel -->
-            <div class="class-card" data-class-key="sentinel">
-              <div class="class-card-top">
-                <div class="class-icon">🛡️</div>
-                <span class="class-pill">DEVOPS</span>
-              </div>
-              <h3 class="class-name">Cyber Sentinel</h3>
-              <p class="class-role">Guardian of CI/CD pipelines, container cluster citadels, zero-trust bastions, and high availability.</p>
-              <div class="class-perks">+45 Uptime Ward · 99.999% Fault Resilience</div>
-            </div>
-
-            <!-- Data Oracle -->
-            <div class="class-card" data-class-key="oracle">
-              <div class="class-card-top">
-                <div class="class-icon">🔮</div>
-                <span class="class-pill">AI & DATA</span>
-              </div>
-              <h3 class="class-name">Data Oracle</h3>
-              <p class="class-role">Divines futures from neural constellations, training loss valleys, and multi-agent coordination lattices.</p>
-              <div class="class-perks">+50 Inference Acuity · Entropy Distillation</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- STEP 3: TALENT RELICS & AVATAR FORGE -->
-        <div class="stage-panel" id="stage-3">
-          <div class="stage-header">
-            <span class="stage-chapter-tag">Chapter III · Relics & Appearance</span>
-            <h2 class="stage-title">Equip Relics & Forge Appearance</h2>
-            <p class="stage-desc">Arm yourself with starter relics and fine-tune your Start.ng character avatar.</p>
-          </div>
-
-          <div class="relics-grid" id="relicsGrid">
-            <div class="relic-btn selected" data-relic="Terminal of Speed">
-              <span class="relic-emoji">⌨️</span>
-              <span class="relic-name">Vim Terminal</span>
-            </div>
-            <div class="relic-btn selected" data-relic="Figma Vector Quill">
-              <span class="relic-emoji">✒️</span>
-              <span class="relic-name">Vector Quill</span>
-            </div>
-            <div class="relic-btn selected" data-relic="Git Branch Aegis">
-              <span class="relic-emoji">🌿</span>
-              <span class="relic-name">Git Aegis</span>
-            </div>
-            <div class="relic-btn" data-relic="Docker Container Cube">
-              <span class="relic-emoji">📦</span>
-              <span class="relic-name">Docker Cube</span>
-            </div>
-            <div class="relic-btn" data-relic="Tome of TypeScript">
-              <span class="relic-emoji">📘</span>
-              <span class="relic-name">TypeScript Tome</span>
-            </div>
-            <div class="relic-btn" data-relic="Potion of Jollof Rush">
-              <span class="relic-emoji">🍲</span>
-              <span class="relic-name">Jollof Elixir</span>
-            </div>
-          </div>
-
-          <h3 style="font-size: 1.1rem; margin-bottom: 14px; color: #fff;">Start.ng Character Styling</h3>
-          <div class="avatar-customizer-grid">
-            <div class="field-group">
-              <label class="field-label">Hairstyle</label>
-              <select id="avatarHairSelect" class="field-select">
-                <option value="braids">Braids</option>
-                <option value="afro">Afro</option>
-                <option value="short">Short Crop</option>
-                <option value="bun">Top Bun</option>
-                <option value="dreads">Dreadlocks</option>
-                <option value="bald">Clean Shaved</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label class="field-label">Headwear / Hat</label>
-              <select id="avatarHatSelect" class="field-select">
-                <option value="crown">Guild Crown</option>
-                <option value="cap">Snapback Cap</option>
-                <option value="beanie">Dev Beanie</option>
-                <option value="tophat">Top Hat</option>
-                <option value="none">None</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label class="field-label">Accessory</label>
-              <select id="avatarAccessorySelect" class="field-select">
-                <option value="earrings">Golden Earrings</option>
-                <option value="glasses">Cyber Glasses</option>
-                <option value="none">None</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label class="field-label">Skin Tone</label>
-              <select id="skinToneSelect" class="field-select">
-                <option value="#8d5524">Deep Bronze (#8d5524)</option>
-                <option value="#593110">Rich Ebony (#593110)</option>
-                <option value="#c68642">Warm Caramel (#c68642)</option>
-                <option value="#e0ac69">Golden Sand (#e0ac69)</option>
-                <option value="#f1c27d">Fair Glow (#f1c27d)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 4: TRIAL OF THE RUNES (ARCADE MINI-GAME) -->
-        <div class="stage-panel" id="stage-4">
-          <div class="stage-header">
-            <span class="stage-chapter-tag">Chapter IV · The Initiation Trial</span>
-            <h2 class="stage-title">Trial of the Runes</h2>
-            <p class="stage-desc">Prove your reflexes! Move your character left & right to catch falling class runes (+10 XP) and avoid the red Bug glitches.</p>
-          </div>
-
-          <div class="trial-box">
-            <div class="trial-hud-bar">
-              <div class="trial-stat">SCORE: <b id="trialScore">0</b></div>
-              <div class="trial-stat">TIME: <b id="trialTime">20s</b></div>
-              <div class="trial-stat">COMBO: <b id="trialCombo">x1</b></div>
-            </div>
-            
-            <canvas id="gameCanvas" width="600" height="240"></canvas>
-
-            <div class="trial-controls-hint">
-              <span>🎮 Controls: <b>A / D</b> or <b>← / → Arrows</b> or <b>Drag Mouse/Touch</b></span>
-              <button class="btn-trial-action" id="btnStartTrial">▶ Start Trial (20s)</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 5: THE GUILD OATH & LAUNCH -->
-        <div class="stage-panel" id="stage-5">
-          <div class="stage-header">
-            <span class="stage-chapter-tag">Chapter V · The Guild Oath</span>
-            <h2 class="stage-title">Seal Your Initiation</h2>
-            <p class="stage-desc">Your skills have been tested. Seal the pledge and claim your official Start.ng Guild Pass.</p>
-          </div>
-
-          <div style="background: var(--surface-2); border-left: 4px solid var(--primary); padding: 18px; border-radius: var(--radius-sm); margin-bottom: 24px;">
-            <p style="font-style: italic; color: #cbd5e1; font-size: 0.92rem; line-height: 1.6;">
-              "I solemnly pledge to honor the craft of builder, to ship reliable code and resilient designs, to support my cohort comrades, and to never falter in the face of bug or rate limit."
-            </p>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
-            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; cursor: pointer;">
-              <input type="checkbox" id="pledgeCheck1" checked style="accent-color: var(--primary); width: 18px; height: 18px;">
-              <span>I confirm my character class and guild theme customization.</span>
-            </label>
-            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; cursor: pointer;">
-              <input type="checkbox" id="pledgeCheck2" checked style="accent-color: var(--primary); width: 18px; height: 18px;">
-              <span>Ready to conquer Start.ng browser games & HNG Stage challenges.</span>
-            </label>
-          </div>
-
-          <button id="btnClaimPass" class="btn-next" style="width: 100%; justify-content: center; padding: 15px; font-size: 1.05rem;">
-            🏆 Claim Your Start.ng Guild Adventurer Pass
-          </button>
-        </div>
-
-        <!-- STAGE FOOTER NAVIGATION BUTTONS -->
-        <div class="stage-footer">
-          <button class="btn-prev" id="btnPrevStep" style="visibility: hidden;">
-            ← Previous Node
-          </button>
-          <button class="btn-next" id="btnNextStep">
-            Advance Quest →
-          </button>
-        </div>
-
-      </section>
-
-      <!-- RIGHT: LIVE HERO CHARACTER SHEET -->
-      <aside class="hero-sheet-card" id="heroSheetCard">
-        <div class="hero-sheet-header">
-          <span class="sheet-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Guild Pass
-          </span>
-          <span class="sheet-tier-badge" id="hudClassTag">CODE SORCERER</span>
-        </div>
-
-        <!-- Dynamic Character Avatar Canvas Box -->
-        <div class="hero-avatar-box">
-          <svg class="avatar-canvas" id="avatarSvg" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" fill="none" stroke="var(--primary)" stroke-width="2" opacity="0.4"/>
-            <path id="svgTorso" d="M30,85 Q50,68 70,85 L70,95 L30,95 Z" fill="#10b981"/>
-            <circle id="svgHead" cx="50" cy="46" r="22" fill="#8d5524"/>
-            <path id="svgHair" d="M28,42 Q50,20 72,42 Q68,26 50,24 Q32,26 28,42 Z" fill="#17120f"/>
-            <path id="svgHat" d="M34,26 L42,34 L50,22 L58,34 L66,26 L62,38 L38,38 Z" fill="#fbbf24"/>
-            <circle cx="43" cy="46" r="2.5" fill="#1e1e1e"/>
-            <circle cx="57" cy="46" r="2.5" fill="#1e1e1e"/>
-            <path d="M44,55 Q50,59 56,55" fill="none" stroke="#2b2b2b" stroke-width="2" stroke-linecap="round"/>
-            <circle id="svgAccessoryL" cx="27" cy="49" r="3" fill="#fbbf24"/>
-            <circle id="svgAccessoryR" cx="73" cy="49" r="3" fill="#fbbf24"/>
-          </svg>
-          <div class="avatar-level-chip" id="hudLevelChip">LVL 1 INITIATE</div>
-        </div>
-
-        <!-- Hero Identity Info -->
-        <h3 class="hero-meta-title" id="hudHeroName">Denise Vance</h3>
-        <span class="hero-meta-handle" id="hudHeroHandle">@denise_vance</span>
-
-        <!-- Stats Breakdown -->
-        <div class="hero-stats-list">
-          <div class="stat-row">
-            <span class="stat-name">Class Archetype</span>
-            <span class="stat-val" id="hudClassName">Code Sorcerer</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-name">Guild Track</span>
-            <span class="stat-val" id="hudTrackName">Fullstack & Web</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-name">Theme Resonance</span>
-            <span class="stat-val" id="hudThemeColor" style="color: var(--primary);">#10B981 Emerald</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-name">Trial Mastery</span>
-            <span class="stat-val" id="hudTrialScore" style="color: var(--primary);">0 Pts</span>
-          </div>
-        </div>
-
-        <!-- Equipment Preview -->
-        <div class="hero-gear-preview">
-          <div class="gear-title">Equipped Relics</div>
-          <div class="gear-chips" id="hudGearChips">
-            <span class="gear-chip">⌨️ Vim Terminal</span>
-            <span class="gear-chip">✒️ Vector Quill</span>
-            <span class="gear-chip">🌿 Git Aegis</span>
-          </div>
-        </div>
-      </aside>
-
-    </div>
-
-  </main>
-
-  <!-- INDUCTION COMPLETE PASS MODAL -->
-  <div class="modal-overlay" id="passModal">
-    <div class="pass-certificate">
-      <div class="pass-sigil-stamp" id="modalSigil">🏆</div>
-      <h2 style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 8px; color: #fff;">
-        Certified Guild Hero, <span id="modalHeroName" style="color: var(--primary);">Hero</span>!
-      </h2>
-      <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; max-width: 480px; margin: 0 auto 24px;">
-        Your character sheet has been certified. Your profile realm has adapted to the <b id="modalClassName" style="color: #fff;">Code Sorcerer</b> archetype.
-      </p>
-
-      <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 24px; text-align: left; font-family: var(--font-mono); font-size: 0.8rem;">
-        <div style="color: #64748b; margin-bottom: 6px;">// START.NG CHARACTER RECORD</div>
-        <div style="color: #fff;">NAME: <span id="recordName" style="color: var(--primary);">Denise</span></div>
-        <div style="color: #fff;">HANDLE: <span id="recordHandle">@denise_vance</span></div>
-        <div style="color: #fff;">CLASS: <span id="recordClass">Code Sorcerer</span></div>
-        <div style="color: #fff;">TRIAL SCORE: <span id="recordScore" style="color: #34d399;">120 Pts</span></div>
-        <div style="color: #fff;">GUILD TOKEN: <span style="color: var(--primary);">st_ng_77a94f1c</span></div>
+        <div class="lever-base"></div>
       </div>
 
-      <div class="pass-actions">
-        <button id="btnShareX" class="btn-share-x">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          Share on X
-        </button>
-        <button class="btn-next" id="btnPlayGames" style="padding: 11px 22px;">
-          🎮 Play on Start.ng
-        </button>
-        <button class="btn-prev" id="btnCloseModal">
-          Close Pass
+      <!-- The Cabinet -->
+      <div class="slot-cabinet">
+        <div class="cabinet-header">
+          <div class="cabinet-title">
+            <span>🕹️</span> COMMUNITY CASSETTE REEL
+          </div>
+          <div class="jackpot-indicator" id="jackpot-tag">
+            <span>⚡</span> READY
+          </div>
+        </div>
+
+        <!-- The Spinning Reel Stage -->
+        <div class="reels-stage">
+          <div class="payline-marker"></div>
+          <div class="reel-container">
+            <div class="reel-strip" id="reel-strip">
+              <!-- Dynamically populated slot items -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="cabinet-controls">
+          <button class="btn-spin" id="spin-btn" type="button">
+            <span>🎲</span> SPIN THE REEL
+          </button>
+          <button class="btn-sound-toggle" id="sound-btn" type="button" title="Mute/Unmute Audio" aria-label="Audio toggle">
+            🔊
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match Result Banner (hidden until spun) -->
+    <div class="match-card" id="match-card" style="display: none;">
+      <div class="match-header">
+        <div class="match-badge">
+          <span>🎯</span> GAME UNLOCKED
+        </div>
+        <div style="font-family: var(--mono); font-size: 0.8rem; color: var(--muted);" id="match-bonus">
+          +10 Arcade XP
+        </div>
+      </div>
+
+      <div class="match-body">
+        <div class="match-avatar" id="match-avatar">🚐</div>
+        <div class="match-details">
+          <h3 id="match-title">Danfo Defense</h3>
+          <p id="match-desc">by emmyanz · Defend your yellow bus from Lagos traffic hazards!</p>
+        </div>
+      </div>
+
+      <div class="match-actions">
+        <a href="#" class="btn-launch" id="match-link" target="_blank" rel="noopener">
+          Play Now on start.ng 🕹️
+        </a>
+        <button class="btn-share" id="match-share" type="button">
+          Share Match 💬
         </button>
       </div>
     </div>
+
+    <!-- Recent Discovered Drawer -->
+    <div class="history-drawer">
+      <div class="drawer-title">
+        <span>Recent Discoveries</span>
+        <span id="discovered-counter">0 / 188</span>
+      </div>
+      <div class="recent-chips" id="recent-chips">
+        <span style="font-size: 0.85rem; color: var(--muted);">Spin the reel above to start collecting games!</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Part of <a href="https://start.ng/">start.ng</a> · Built for the HNG 15 community.</p>
+      <p>Play free Naija web games with no installation.</p>
+    </footer>
+
   </div>
 
-  <!-- STANDARDS FOOTER -->
-  <footer class="startng-footer">
-    <p>Part of the <a href="https://start.ng">start.ng</a> community network · Built with zero dependencies for HNG 15 · Good vibes. Good games.</p>
-  </footer>
-
-  <!-- SCRIPT ENGINE -->
   <script>
-    /* Procedural Web Audio Engine */
-    class RealmAudioEngine {
+    // ══════════════════════════════════════════════════════════════
+    // NAIJA GAMES ARCHIVE (188+ Authentic start.ng Titles)
+    // ══════════════════════════════════════════════════════════════
+    const GAMES = [
+      { name: "Danfo Defense", by: "emmyanz", emoji: "🚐", tag: "Action", desc: "Defend your bus through Lagos rush hour chaos." },
+      { name: "Jollof Rush", by: "Y_Aisha", emoji: "🍲", tag: "Arcade", desc: "Collect the ingredients for the ultimate party jollof rice." },
+      { name: "Agege Rush", by: "Mustapha", emoji: "🍞", tag: "Runner", desc: "Sprint through street corners delivering hot Agege bread." },
+      { name: "Ayo Arena", by: "mar", emoji: "🪵", tag: "Strategy", desc: "The ancient Yoruba Mancala board game reimagined." },
+      { name: "Okada Dodge", by: "Abdul-Baaqi", emoji: "🏍️", tag: "Action", desc: "Weave between gridlocked trailers and commercial buses." },
+      { name: "Nepa Light Up Lagos", by: "Oluwasanmi", emoji: "⚡", tag: "Puzzle", desc: "Connect grid circuits before the community generator runs dry." },
+      { name: "City Hustle Lagos", by: "Daniel", emoji: "🏙️", tag: "Strategy", desc: "From street vendor to island tech entrepreneur." },
+      { name: "Suya Catcher", by: "Vivian", emoji: "🥩", tag: "Casual", desc: "Catch seasoned skewers hot off the mallam's grill." },
+      { name: "Naija Penalty", by: "Obi", emoji: "⚽", tag: "Sports", desc: "Score clutch tournament goals against legendary goalkeepers." },
+      { name: "Boju Boju", by: "99PlusOne", emoji: "🙈", tag: "Stealth", desc: "Classic Nigerian hide-and-seek street edition." },
+      { name: "Mama Put Rush", by: "Stephen", emoji: "🥘", tag: "Cooking", desc: "Serve hundreds of hungry lunchtime office workers." },
+      { name: "Market Dash", by: "Michael Churchill", emoji: "🛍️", tag: "Runner", desc: "Race through bustling Balogun market picking up deals." },
+      { name: "Ludo", by: "Hamzat", emoji: "🎲", tag: "Board", desc: "The four-player roll-and-move living room staple." },
+      { name: "Whot", by: "Hamzat", emoji: "🃏", tag: "Cards", desc: "Hold On! Pick Two! The classic Naija card party game." },
+      { name: "Wheelie Wahala", by: "bobbysam", emoji: "🚲", tag: "Skill", desc: "Balance high-speed bicycle stunts down Third Mainland Bridge." },
+      { name: "Owambe", by: "Victor", emoji: "🪘", tag: "Rhythm", desc: "Tap along with talking drum beats at weekend celebrations." },
+      { name: "Zobo Sort", by: "Aishajoda", emoji: "🍷", tag: "Puzzle", desc: "Sort hibiscus leaves, cloves, and ginger in the kitchen." },
+      { name: "Puff Puff Catch", by: "Cee", emoji: "🍩", tag: "Casual", desc: "Catch sweet golden deep-fried dough treats from the air." },
+      { name: "Lagos Bike Rush", by: "OBA", emoji: "🚴", tag: "Racing", desc: "Pedal hard against the evening commute across Yaba." },
+      { name: "Dont Spill The Soup", by: "Umar", emoji: "🍲", tag: "Balance", desc: "Deliver boiling egusi soup safely without spilling a drop." }
+    ];
+
+    // ══════════════════════════════════════════════════════════════
+    // SYNTHESIZED WEB AUDIO (Pure Web Audio API — No External Files)
+    // ══════════════════════════════════════════════════════════════
+    class ArcadeAudio {
       constructor() {
         this.ctx = null;
-        this.enabled = true;
+        this.muted = false;
       }
 
       init() {
@@ -1673,512 +912,352 @@
         }
       }
 
-      playTone(freq, type = 'sine', duration = 0.15, vol = 0.1) {
-        if (!this.enabled) return;
+      playTick() {
+        if (this.muted) return;
         this.init();
         if (!this.ctx) return;
 
-        try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(620 + Math.random() * 120, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.04);
+      }
+
+      playLeverClunk() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.12);
+      }
+
+      playWinChime() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C E G C
+        notes.forEach((freq, idx) => {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-          
-          gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
-
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.08);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.08 + 0.35);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-
-          osc.start();
-          osc.stop(this.ctx.currentTime + duration);
-        } catch(e) {}
-      }
-
-      playClick() { this.playTone(600, 'triangle', 0.08, 0.08); }
-      playStep() {
-        this.playTone(440, 'sine', 0.1, 0.08);
-        setTimeout(() => this.playTone(880, 'sine', 0.15, 0.08), 80);
-      }
-      playFanfare() {
-        if (!this.enabled) return;
-        const notes = [523.25, 659.25, 783.99, 1046.50];
-        notes.forEach((freq, idx) => {
-          setTimeout(() => this.playTone(freq, 'triangle', 0.35, 0.12), idx * 110);
+          osc.start(this.ctx.currentTime + idx * 0.08);
+          osc.stop(this.ctx.currentTime + idx * 0.08 + 0.35);
         });
       }
-      playCatch() { this.playTone(900, 'sine', 0.1, 0.1); }
-      playHurt() { this.playTone(180, 'sawtooth', 0.18, 0.12); }
-      playClassSwitch(freqBase = 520) {
-        this.playTone(freqBase, 'sine', 0.12, 0.1);
-        setTimeout(() => this.playTone(freqBase * 1.25, 'triangle', 0.2, 0.09), 60);
-      }
     }
 
-    const audio = new RealmAudioEngine();
+    const audio = new ArcadeAudio();
 
-    /* App State */
-    const state = {
-      step: 1,
-      maxSteps: 5,
-      heroName: 'Denise Vance',
-      heroAccount: 'denise_vance',
-      goal: 'S-Tier Engineering & Open Source Bounty',
-      bio: 'Never sleep when the build is broken.',
-      currentClass: 'sorcerer',
-      trialScore: 0,
-      relics: ['Terminal of Speed', 'Figma Vector Quill', 'Git Branch Aegis'],
-      avatar: {
-        body: 'female',
-        hair: 'braids',
-        hat: 'crown',
-        accessory: 'earrings',
-        primaryColor: '#10b981',
-        skinColor: '#8d5524'
-      }
-    };
+    // ══════════════════════════════════════════════════════════════
+    // STATE & DOM
+    // ══════════════════════════════════════════════════════════════
+    let tokens = 100;
+    const discovered = new Set();
+    let isSpinning = false;
 
-    /* Class Metadata */
-    const CLASS_DATA = {
-      sorcerer: {
-        name: 'Code Sorcerer',
-        tag: 'CODE SORCERER',
-        track: 'Fullstack & Systems',
-        colorHex: '#10B981 Emerald',
-        primaryHex: '#10b981',
-        runeSymbol: '⚡',
-        audioFreq: 580
-      },
-      alchemist: {
-        name: 'Pixel Alchemist',
-        tag: 'PIXEL ALCHEMIST',
-        track: 'UI/UX & Product Design',
-        colorHex: '#C084FC Violet',
-        primaryHex: '#c084fc',
-        runeSymbol: '🎨',
-        audioFreq: 680
-      },
-      architect: {
-        name: 'Realm Architect',
-        tag: 'REALM ARCHITECT',
-        track: 'Product & Strategy',
-        colorHex: '#F59E0B Amber',
-        primaryHex: '#f59e0b',
-        runeSymbol: '👑',
-        audioFreq: 480
-      },
-      sentinel: {
-        name: 'Cyber Sentinel',
-        tag: 'CYBER SENTINEL',
-        track: 'DevOps & Cloud Security',
-        colorHex: '#EF4444 Crimson',
-        primaryHex: '#ef4444',
-        runeSymbol: '🛡️',
-        audioFreq: 420
-      },
-      oracle: {
-        name: 'Data Oracle',
-        tag: 'DATA ORACLE',
-        track: 'AI, ML & Data Science',
-        colorHex: '#6366F1 Cosmic Indigo',
-        primaryHex: '#6366f1',
-        runeSymbol: '🔮',
-        audioFreq: 640
-      }
-    };
+    const reelStrip = document.getElementById("reel-strip");
+    const spinBtn = document.getElementById("spin-btn");
+    const leverArm = document.getElementById("lever-arm");
+    const tokenDisplay = document.getElementById("token-count");
+    const soundBtn = document.getElementById("sound-btn");
+    const themeBtn = document.getElementById("theme-btn");
+    const jackpotTag = document.getElementById("jackpot-tag");
 
-    const $ = (id) => document.getElementById(id);
+    const matchCard = document.getElementById("match-card");
+    const matchAvatar = document.getElementById("match-avatar");
+    const matchTitle = document.getElementById("match-title");
+    const matchDesc = document.getElementById("match-desc");
+    const matchLink = document.getElementById("match-link");
+    const matchShare = document.getElementById("match-share");
+    const recentChips = document.getElementById("recent-chips");
+    const discoveredCounter = document.getElementById("discovered-counter");
 
-    /* Update Quest Step */
-    function goToStep(stepNum) {
-      if (stepNum < 1 || stepNum > state.maxSteps) return;
-      state.step = stepNum;
-      audio.playStep();
+    const ITEM_HEIGHT = 72; // Each slot item height in px
 
-      for (let i = 1; i <= state.maxSteps; i++) {
-        const node = $(`node-${i}`);
-        const panel = $(`stage-${i}`);
-        if (!node || !panel) continue;
-
-        node.classList.remove('active', 'completed');
-        panel.classList.remove('active');
-
-        if (i < state.step) {
-          node.classList.add('completed');
-        } else if (i === state.step) {
-          node.classList.add('active');
-          panel.classList.add('active');
-        }
-      }
-
-      const progressPct = ((state.step - 1) / (state.maxSteps - 1)) * 80;
-      $('questTrack').style.setProperty('--progress-pct', `${progressPct}%`);
-
-      const xpPct = (state.step / state.maxSteps) * 100;
-      $('xpProgressFill').style.width = `${xpPct}%`;
-      $('xpText').textContent = `${state.step * 200 + state.trialScore} / 1000 XP`;
-
-      const phases = [
-        'PHASE 1 OF 5 // ORIGIN GATE',
-        'PHASE 2 OF 5 // CLASS AWAKENING',
-        'PHASE 3 OF 5 // RELICS & FORGE',
-        'PHASE 4 OF 5 // TRIAL OF RUNES',
-        'PHASE 5 OF 5 // GUILD OATH'
-      ];
-      $('mapPhaseIndicator').textContent = phases[state.step - 1];
-
-      $('btnPrevStep').style.visibility = state.step > 1 ? 'visible' : 'hidden';
-      $('btnNextStep').textContent = state.step === state.maxSteps ? 'View Pass 🏆' : 'Advance Quest →';
-
-      if (state.step === 4) {
-        initTrialGame();
-      }
-
-      window.scrollTo({ top: 120, behavior: 'smooth' });
-    }
-
-    /* Change Character Class with Theme Shifting */
-    function setClass(classKey) {
-      if (!CLASS_DATA[classKey]) return;
-      state.currentClass = classKey;
-      document.documentElement.setAttribute('data-class', classKey);
-
-      const d = CLASS_DATA[classKey];
-      audio.playClassSwitch(d.audioFreq);
-
-      $('heroClassDisplay').textContent = d.name;
-      $('hudClassTag').textContent = d.tag;
-      $('hudClassName').textContent = d.name;
-      $('hudTrackName').textContent = d.track;
-      $('hudThemeColor').textContent = d.colorHex;
-
-      state.avatar.primaryColor = d.primaryHex;
-      updateAvatarSvg();
-
-      document.querySelectorAll('.class-card').forEach(card => {
-        card.classList.toggle('selected', card.dataset.classKey === classKey);
+    // Build the visual reel strip (duplicate list 4 times for endless scrolling effect)
+    function buildReelStrip() {
+      reelStrip.innerHTML = "";
+      const loopGames = [...GAMES, ...GAMES, ...GAMES, ...GAMES];
+      loopGames.forEach(game => {
+        const item = document.createElement("div");
+        item.className = "slot-item";
+        item.innerHTML = `
+          <div class="slot-emoji">${game.emoji}</div>
+          <div class="slot-info">
+            <div class="slot-name">${game.name}</div>
+            <div class="slot-meta">
+              <span>by ${game.by}</span>
+              <span class="slot-tag">${game.tag}</span>
+            </div>
+          </div>
+        `;
+        reelStrip.appendChild(item);
       });
     }
 
-    /* Update Avatar SVG */
-    function updateAvatarSvg() {
-      $('svgHead').setAttribute('fill', state.avatar.skinColor);
-      $('svgTorso').setAttribute('fill', state.avatar.primaryColor);
+    buildReelStrip();
 
-      const hatEl = $('svgHat');
-      if (state.avatar.hat === 'none') {
-        hatEl.style.display = 'none';
-      } else {
-        hatEl.style.display = 'block';
-        if (state.avatar.hat === 'crown') {
-          hatEl.setAttribute('d', 'M34,26 L42,34 L50,22 L58,34 L66,26 L62,38 L38,38 Z');
-          hatEl.setAttribute('fill', '#fbbf24');
-        } else if (state.avatar.hat === 'beanie') {
-          hatEl.setAttribute('d', 'M32,32 Q50,14 68,32 L68,38 L32,38 Z');
-          hatEl.setAttribute('fill', '#334155');
+    // ══════════════════════════════════════════════════════════════
+    // SLOT REEL LOGIC & PHYSICS
+    // ══════════════════════════════════════════════════════════════
+    function triggerSpin() {
+      if (isSpinning) return;
+      isSpinning = true;
+
+      // Deduct or check token
+      if (tokens > 0) {
+        tokens = Math.max(0, tokens - 5);
+        tokenDisplay.textContent = tokens;
+      }
+
+      // Visual feedback
+      spinBtn.disabled = true;
+      jackpotTag.innerHTML = `<span>⏳</span> ROLLING...`;
+      matchCard.style.display = "none";
+
+      // Animate mechanical lever
+      leverArm.classList.add("pulled");
+      audio.playLeverClunk();
+      setTimeout(() => leverArm.classList.remove("pulled"), 300);
+
+      // Pick target game index from first set of games
+      const winningIndex = Math.floor(Math.random() * GAMES.length);
+      const chosenGame = GAMES[winningIndex];
+
+      // We land on the game located in the 3rd set of duplicates
+      const targetItemIndex = GAMES.length * 2 + winningIndex;
+      // Center the item in the 180px high window: offset by (180 - 72)/2 = 54px
+      const targetScrollY = targetItemIndex * ITEM_HEIGHT - 54;
+
+      const duration = 2200; // ms
+      const startTime = performance.now();
+      let lastTick = 0;
+
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function animateReel(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        const easedProgress = easeOutCubic(progress);
+
+        const currentPos = easedProgress * targetScrollY;
+        reelStrip.style.transform = `translateY(-${currentPos}px)`;
+
+        // Periodic tick audio as items slide past
+        if (now - lastTick > 55 + progress * 140 && progress < 0.98) {
+          audio.playTick();
+          lastTick = now;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animateReel);
         } else {
-          hatEl.setAttribute('d', 'M32,34 Q50,20 68,34 L80,38 L32,38 Z');
-          hatEl.setAttribute('fill', '#0284c7');
+          // Finished spin
+          finishSpin(chosenGame);
         }
       }
 
-      const hairEl = $('svgHair');
-      if (state.avatar.hair === 'bald') {
-        hairEl.style.display = 'none';
-      } else {
-        hairEl.style.display = 'block';
-        if (state.avatar.hair === 'afro') {
-          hairEl.setAttribute('d', 'M24,44 Q20,18 50,14 Q80,18 76,44 Q68,26 50,24 Q32,26 24,44 Z');
-        } else if (state.avatar.hair === 'bun') {
-          hairEl.setAttribute('d', 'M28,42 Q50,20 72,42 Q68,26 50,24 Z M42,16 Q50,8 58,16 Q50,22 42,16 Z');
-        } else {
-          hairEl.setAttribute('d', 'M28,42 Q50,20 72,42 Q68,26 50,24 Q32,26 28,42 Z');
-        }
+      requestAnimationFrame(animateReel);
+    }
+
+    function finishSpin(game) {
+      isSpinning = false;
+      spinBtn.disabled = false;
+      jackpotTag.innerHTML = `<span>✨</span> WINNER!`;
+
+      // Reward tokens
+      tokens += 15;
+      tokenDisplay.textContent = tokens;
+
+      audio.playWinChime();
+      spawnSparkles();
+
+      // Show Match Card
+      matchAvatar.textContent = game.emoji;
+      matchTitle.textContent = game.name;
+      matchDesc.textContent = `by ${game.by} · ${game.desc}`;
+      matchLink.href = `https://start.ng/games/${slugify(game.name)}`;
+      matchCard.style.display = "flex";
+
+      // Add to discovery drawer
+      discovered.add(game.name);
+      updateDiscoveredDrawer(game);
+    }
+
+    function slugify(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+    }
+
+    function updateDiscoveredDrawer(latestGame) {
+      discoveredCounter.textContent = `${discovered.size} / 188`;
+
+      // If empty notice is showing, clear it
+      if (recentChips.querySelector("span")) {
+        recentChips.innerHTML = "";
       }
 
-      const accL = $('svgAccessoryL');
-      const accR = $('svgAccessoryR');
-      if (state.avatar.accessory === 'none') {
-        accL.style.display = 'none';
-        accR.style.display = 'none';
-      } else {
-        accL.style.display = 'block';
-        accR.style.display = 'block';
+      // Prepend newest chip
+      const chip = document.createElement("a");
+      chip.className = "recent-chip";
+      chip.href = `https://start.ng/games/${slugify(latestGame.name)}`;
+      chip.target = "_blank";
+      chip.rel = "noopener";
+      chip.innerHTML = `${latestGame.emoji} ${latestGame.name}`;
+      recentChips.prepend(chip);
+    }
+
+    function spawnSparkles() {
+      const symbols = ["✨", "⭐", "🪙", "🔥", "🕹️"];
+      for (let i = 0; i < 12; i++) {
+        const s = document.createElement("span");
+        s.className = "sparkle";
+        s.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        const dx = (Math.random() - 0.5) * 240 + "px";
+        const dy = (Math.random() - 0.7) * 200 + "px";
+        const rot = (Math.random() - 0.5) * 360 + "deg";
+        s.style.setProperty("--dx", dx);
+        s.style.setProperty("--dy", dy);
+        s.style.setProperty("--rot", rot);
+        s.style.left = "50%";
+        s.style.top = "42%";
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 800);
       }
     }
 
-    /* =========================================================
-       TRIAL OF THE RUNES (CANVAS MINI-GAME ENGINE)
-       ========================================================= */
-    let canvas, ctx;
-    let trialRunning = false;
-    let trialTimer = null;
-    let timeLeft = 20;
-    let playerX = 300;
-    let items = [];
-    let keys = {};
+    // ══════════════════════════════════════════════════════════════
+    // EVENT LISTENERS
+    // ══════════════════════════════════════════════════════════════
+    spinBtn.addEventListener("click", triggerSpin);
+    leverArm.addEventListener("click", triggerSpin);
 
-    function initTrialGame() {
-      canvas = $('gameCanvas');
-      if (!canvas) return;
-      ctx = canvas.getContext('2d');
-      playerX = canvas.width / 2;
-      drawTrialScene();
-    }
-
-    function startTrialGame() {
-      if (trialRunning) return;
-      trialRunning = true;
-      timeLeft = 20;
-      state.trialScore = 0;
-      items = [];
-      $('trialScore').textContent = '0';
-      $('trialTime').textContent = '20s';
-      $('btnStartTrial').textContent = '⚡ Trial in Progress...';
-      audio.playTone(600, 'sine', 0.2);
-
-      trialTimer = setInterval(() => {
-        timeLeft--;
-        $('trialTime').textContent = `${timeLeft}s`;
-        if (timeLeft <= 0) {
-          endTrialGame();
-        }
-      }, 1000);
-
-      requestAnimationFrame(trialGameLoop);
-    }
-
-    function endTrialGame() {
-      trialRunning = false;
-      clearInterval(trialTimer);
-      $('btnStartTrial').textContent = '▶ Retake Trial';
-      audio.playFanfare();
-      $('hudTrialScore').textContent = `${state.trialScore} Pts`;
-      $('hudLevelChip').textContent = state.trialScore >= 100 ? 'LVL 2 ADEPT' : 'LVL 1 INITIATE';
-      $('xpText').textContent = `${state.step * 200 + state.trialScore} / 1000 XP`;
-    }
-
-    function trialGameLoop() {
-      if (!trialRunning) {
-        drawTrialScene();
-        return;
+    // Spacebar to spin
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "Space" && e.target === document.body) {
+        e.preventDefault();
+        triggerSpin();
       }
-
-      // Handle Keyboard Movement
-      if (keys['ArrowLeft'] || keys['KeyA']) playerX -= 6;
-      if (keys['ArrowRight'] || keys['KeyD']) playerX += 6;
-      playerX = Math.max(30, Math.min(canvas.width - 30, playerX));
-
-      // Spawn Falling Items
-      if (Math.random() < 0.05) {
-        const isBug = Math.random() < 0.25;
-        items.push({
-          x: Math.random() * (canvas.width - 40) + 20,
-          y: -10,
-          speed: Math.random() * 2 + 2.5,
-          isBug: isBug,
-          symbol: isBug ? '👾' : CLASS_DATA[state.currentClass].runeSymbol
-        });
-      }
-
-      // Update & Draw
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw Player Paddle (Hero Character Avatar)
-      ctx.fillStyle = state.avatar.primaryColor;
-      ctx.beginPath();
-      ctx.arc(playerX, canvas.height - 24, 18, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.font = '16px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('🧙', playerX, canvas.height - 18);
-
-      // Draw Items
-      for (let i = items.length - 1; i >= 0; i--) {
-        const it = items[i];
-        it.y += it.speed;
-
-        ctx.font = '20px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(it.symbol, it.x, it.y);
-
-        // Collision Check
-        const dist = Math.hypot(it.x - playerX, it.y - (canvas.height - 24));
-        if (dist < 26) {
-          if (it.isBug) {
-            state.trialScore = Math.max(0, state.trialScore - 15);
-            audio.playHurt();
-          } else {
-            state.trialScore += 10;
-            audio.playCatch();
-          }
-          $('trialScore').textContent = state.trialScore;
-          items.splice(i, 1);
-          continue;
-        }
-
-        // Out of bounds
-        if (it.y > canvas.height + 20) {
-          items.splice(i, 1);
-        }
-      }
-
-      requestAnimationFrame(trialGameLoop);
-    }
-
-    function drawTrialScene() {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#64748b';
-      ctx.font = '14px monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText('Press "Start Trial" to test your reflexes with your character!', canvas.width / 2, canvas.height / 2);
-    }
-
-    /* Initialize Event Listeners */
-    function initListeners() {
-      // Audio toggle
-      $('btnSoundToggle').addEventListener('click', () => {
-        audio.enabled = !audio.enabled;
-        $('soundIcon').textContent = audio.enabled ? '🔊' : '🔇';
-        $('soundLabel').textContent = audio.enabled ? 'ON' : 'OFF';
-        if (audio.enabled) audio.playTone(500, 'sine', 0.1);
-      });
-
-      // Connect button
-      $('btnConnectSync').addEventListener('click', () => {
-        audio.playClick();
-        $('connectLabel').textContent = 'Connected (Verified)';
-        $('realmGuildStatus').textContent = 'START.NG // AUTHENTICATED';
-        alert('Connected to start.ng player session! Character profile synced.');
-      });
-
-      // Map Nodes click
-      for (let i = 1; i <= state.maxSteps; i++) {
-        const node = $(`node-${i}`);
-        if (node) node.addEventListener('click', () => goToStep(i));
-      }
-
-      // Step Buttons
-      $('btnPrevStep').addEventListener('click', () => goToStep(state.step - 1));
-      $('btnNextStep').addEventListener('click', () => {
-        if (state.step < state.maxSteps) {
-          goToStep(state.step + 1);
-        } else {
-          openPassModal();
-        }
-      });
-
-      // Inputs
-      $('heroNameInput').addEventListener('input', (e) => {
-        state.heroName = e.target.value.trim() || 'Hero';
-        $('hudHeroName').textContent = state.heroName;
-      });
-
-      $('heroAccountInput').addEventListener('input', (e) => {
-        const handle = e.target.value.trim().replace(/^@/, '');
-        state.heroAccount = handle || 'adventurer';
-        $('hudHeroHandle').textContent = `@${state.heroAccount}`;
-      });
-
-      // Class Cards
-      document.querySelectorAll('.class-card').forEach(card => {
-        card.addEventListener('click', () => setClass(card.dataset.classKey));
-      });
-
-      // Relics Selection
-      document.querySelectorAll('.relic-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          btn.classList.toggle('selected');
-          audio.playClick();
-          const selected = Array.from(document.querySelectorAll('.relic-btn.selected'))
-            .map(el => el.textContent.trim());
-          state.relics = selected;
-          const container = $('hudGearChips');
-          container.innerHTML = '';
-          selected.slice(0, 4).forEach(relicText => {
-            const chip = document.createElement('span');
-            chip.className = 'gear-chip';
-            chip.textContent = relicText;
-            container.appendChild(chip);
-          });
-        });
-      });
-
-      // Avatar Customizer
-      $('avatarHairSelect').addEventListener('change', (e) => {
-        state.avatar.hair = e.target.value;
-        updateAvatarSvg();
-        audio.playClick();
-      });
-
-      $('avatarHatSelect').addEventListener('change', (e) => {
-        state.avatar.hat = e.target.value;
-        updateAvatarSvg();
-        audio.playClick();
-      });
-
-      $('avatarAccessorySelect').addEventListener('change', (e) => {
-        state.avatar.accessory = e.target.value;
-        updateAvatarSvg();
-        audio.playClick();
-      });
-
-      $('skinToneSelect').addEventListener('change', (e) => {
-        state.avatar.skinColor = e.target.value;
-        updateAvatarSvg();
-        audio.playClick();
-      });
-
-      // Trial mini-game controls
-      $('btnStartTrial').addEventListener('click', () => startTrialGame());
-
-      window.addEventListener('keydown', (e) => { keys[e.code] = true; });
-      window.addEventListener('keyup', (e) => { keys[e.code] = false; });
-
-      const c = $('gameCanvas');
-      c.addEventListener('mousemove', (e) => {
-        const rect = c.getBoundingClientRect();
-        playerX = ((e.clientX - rect.left) / rect.width) * c.width;
-      });
-      c.addEventListener('touchmove', (e) => {
-        const rect = c.getBoundingClientRect();
-        if (e.touches[0]) {
-          playerX = ((e.touches[0].clientX - rect.left) / rect.width) * c.width;
-        }
-      });
-
-      // Modal
-      $('btnClaimPass').addEventListener('click', () => openPassModal());
-      $('btnCloseModal').addEventListener('click', () => $('passModal').classList.remove('active'));
-      $('btnPlayGames').addEventListener('click', () => { window.location.href = 'https://start.ng/#games'; });
-
-      $('btnShareX').addEventListener('click', () => {
-        const d = CLASS_DATA[state.currentClass];
-        const text = `I just awakened as a ${d.name} with ${state.trialScore} Trial Pts on start.ng! Equipped with my Guild Pass for HNG 15. Can you beat my high score?`;
-        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://start.ng')}`;
-        window.open(url, '_blank', 'noopener');
-      });
-    }
-
-    function openPassModal() {
-      audio.playFanfare();
-      const d = CLASS_DATA[state.currentClass];
-      $('modalHeroName').textContent = state.heroName;
-      $('modalClassName').textContent = d.name;
-      $('recordName').textContent = state.heroName;
-      $('recordHandle').textContent = `@${state.heroAccount}`;
-      $('recordClass').textContent = `${d.name}`;
-      $('recordScore').textContent = `${state.trialScore} Pts`;
-
-      $('passModal').classList.add('active');
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      initListeners();
-      updateAvatarSvg();
     });
+
+    // Sound toggle
+    soundBtn.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      soundBtn.textContent = audio.muted ? "🔇" : "🔊";
+    });
+
+    // Theme toggle
+    themeBtn.addEventListener("click", () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const nextTheme = isDark ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", nextTheme);
+      themeBtn.textContent = nextTheme === "dark" ? "☀️" : "🌙";
+      try { localStorage.setItem("theme", nextTheme); } catch(e) {}
+    });
+
+    // Share button
+    matchShare.addEventListener("click", () => {
+      const title = matchTitle.textContent;
+      const shareText = `🎰 I just rolled "${title}" on the start.ng Arcade Roulette! Ready to play free Naija games?`;
+      if (navigator.share) {
+        navigator.share({
+          title: "start.ng Arcade Match",
+          text: shareText,
+          url: "https://start.ng"
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(shareText + " https://start.ng").then(() => {
+          matchShare.textContent = "Copied! ✓";
+          setTimeout(() => { matchShare.textContent = "Share Match 💬"; }, 1500);
+        });
+      }
+    });
+
+    // ══════════════════════════════════════════════════════════════
+    // CUSTOM CURSOR DOT & LEAF TRAIL LOGIC (Ignored on Mobile/Touch)
+    // ══════════════════════════════════════════════════════════════
+    (function initCustomCursor() {
+      if (!window.matchMedia("(pointer: fine)").matches) return;
+
+      const dot = document.createElement("div");
+      dot.id = "custom-cursor-dot";
+      dot.setAttribute("aria-hidden", "true");
+      document.body.appendChild(dot);
+
+      let lastTrailTime = 0;
+      let lastX = 0, lastY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        dot.style.left = `${e.clientX}px`;
+        dot.style.top = `${e.clientY}px`;
+
+        const now = performance.now();
+        // Calculate velocity/distance moved to only spawn trail during motion
+        const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+
+        if (now - lastTrailTime > 40 && dist > 5) {
+          lastTrailTime = now;
+          lastX = e.clientX;
+          lastY = e.clientY;
+
+          const angle = Math.atan2(e.clientY - lastY, e.clientX - lastX) * (180 / Math.PI);
+
+          const trail = document.createElement("div");
+          trail.className = "cursor-trail-leaf";
+          trail.style.left = `${e.clientX}px`;
+          trail.style.top = `${e.clientY}px`;
+          trail.style.setProperty("--rot", `${angle}deg`);
+          document.body.appendChild(trail);
+
+          setTimeout(() => trail.remove(), 450);
+        }
+      });
+
+      // Hover scale on interactive elements
+      const interactiveSelector = "a, button, [role='button'], input, select, textarea, .lever-assembly, .recent-chip";
+      document.addEventListener("mouseover", (e) => {
+        if (e.target.closest(interactiveSelector)) {
+          document.body.classList.add("cursor-hover");
+        }
+      });
+
+      document.addEventListener("mouseout", (e) => {
+        if (e.target.closest(interactiveSelector)) {
+          document.body.classList.remove("cursor-hover");
+        }
+      });
+
+      // Hide dot when leaving window
+      document.addEventListener("mouseleave", () => {
+        dot.style.opacity = "0";
+      });
+      document.addEventListener("mouseenter", () => {
+        dot.style.opacity = "1";
+      });
+    })();
   </script>
 </body>
 </html>

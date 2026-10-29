@@ -1,10 +1,13 @@
 {
-  "name": "guild-adventure",
-  "description": "An interactive, gamified onboarding adventure for Start.ng. Navigate the Quest Map, choose your character class, and awaken your profile theme.",
+  "name": "arcade-roulette",
+  "title": "Arcade Game Roulette",
+  "description": "A whimsical, retro-arcade slot machine for discovering 188+ free Naija browser games on start.ng. Pull the mechanical lever or hit spin to roll the reel, unlock game matches, earn arcade tokens, and jump straight into action.",
+  "category": "arcade",
+  "tags": ["arcade", "roulette", "random-picker", "discovery", "naija-games"],
   "leaderboard": {
     "stats": [
-      { "key": "xp", "label": "Guild XP", "order": "highest" },
-      { "key": "trial_score", "label": "Trial Score", "order": "highest" }
+      { "key": "tokens", "label": "Arcade Tokens", "order": "highest" },
+      { "key": "discovered", "label": "Games Discovered", "order": "highest" }
     ]
   }
 }
