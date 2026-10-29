@@ -17,3 +17,4 @@ registerPagePart({ feature: FEATURE, key: "roulette-games", page: "games", order
 // Standalone roulette / surprise pages
 registerPage({ feature: FEATURE, path: "/roulette", shell: "app", load: () => import("./RoulettePage") });
 registerPage({ feature: FEATURE, path: "/surprise", shell: "app", load: () => import("./RoulettePage") });
+
