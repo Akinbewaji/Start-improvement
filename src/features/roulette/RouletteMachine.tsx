@@ -5,6 +5,7 @@ import { getRouletteGames, type RouletteGame } from "./games";
 import "./roulette.css";
 
 const ITEM_HEIGHT = 72; // Each slot row height in px
+const STAGE_CENTER_OFFSET = 54; // (180 - 72) / 2 to center the winning item
 
 export default function RouletteMachine({ games }: { games?: Game[] }) {
   const rouletteGames = useMemo(() => getRouletteGames(games), [games]);
@@ -19,36 +20,53 @@ export default function RouletteMachine({ games }: { games?: Game[] }) {
 
   const stripRef = useRef<HTMLDivElement | null>(null);
   const animationRef = useRef<number | null>(null);
+  const isSpinningRef = useRef(false);
+  isSpinningRef.current = isSpinning;
+  const currentYRef = useRef(0);
 
-  // Triple duplicated list for smooth endless scrolling effect
+  // Duplicated list (5 sets) to allow continuous seamless looping
   const displayItems = useMemo(() => {
-    return [...rouletteGames, ...rouletteGames, ...rouletteGames, ...rouletteGames];
+    return [
+      ...rouletteGames,
+      ...rouletteGames,
+      ...rouletteGames,
+      ...rouletteGames,
+      ...rouletteGames,
+    ];
   }, [rouletteGames]);
 
   const spin = useCallback(() => {
-    if (isSpinning || rouletteGames.length === 0) return;
+    if (isSpinningRef.current || rouletteGames.length === 0) return;
     setIsSpinning(true);
     setWinningGame(null);
     setStatusText("ROLLING...");
 
-    // Mechanical lever sound & animation
+    // Mechanical lever animation and sound
     setPulled(true);
-    rouletteAudio.playLeverClunk();
-    setTimeout(() => setPulled(false), 300);
+    try {
+      rouletteAudio.playLeverClunk();
+    } catch {
+      // Audio fallback
+    }
+    setTimeout(() => setPulled(false), 260);
 
     // Deduct tokens
     setTokens((t) => Math.max(0, t - 5));
 
-    // Choose target index from the original set
-    const winningIdx = Math.floor(Math.random() * rouletteGames.length);
+    const totalGames = rouletteGames.length;
+    const loopHeight = totalGames * ITEM_HEIGHT;
+
+    // Pick a winning index
+    const winningIdx = Math.floor(Math.random() * totalGames);
     const chosen = rouletteGames[winningIdx];
 
-    // Land on the item located in the 3rd set of duplicates
-    const targetItemIndex = rouletteGames.length * 2 + winningIdx;
-    // Center the item in the 180px high window: offset by (180 - 72) / 2 = 54px
-    const targetScrollY = targetItemIndex * ITEM_HEIGHT - 54;
+    // Normalize starting position within 1 loop so numbers never grow infinitely
+    const startY = currentYRef.current % loopHeight;
+    // Target position in the 3rd loop set
+    const targetY = 2 * loopHeight + winningIdx * ITEM_HEIGHT - STAGE_CENTER_OFFSET;
+    const distance = targetY - startY;
 
-    const duration = 2200; // ms
+    const duration = 2400; // ms
     const startTime = performance.now();
     let lastTick = 0;
 
@@ -58,27 +76,37 @@ export default function RouletteMachine({ games }: { games?: Game[] }) {
       const elapsed = now - startTime;
       const progress = Math.min(1, elapsed / duration);
       const eased = easeOutCubic(progress);
-      const currentPos = eased * targetScrollY;
+      const currentPos = startY + eased * distance;
 
       if (stripRef.current) {
         stripRef.current.style.transform = `translateY(-${currentPos}px)`;
       }
 
-      // Audio ticks as items slide past
-      if (now - lastTick > 55 + progress * 140 && progress < 0.98) {
-        rouletteAudio.playTick();
+      // Audio ticks that decelerate as the reel slows down
+      if (now - lastTick > 55 + progress * 160 && progress < 0.98) {
+        try {
+          rouletteAudio.playTick();
+        } catch {
+          // ignore
+        }
         lastTick = now;
       }
 
       if (progress < 1) {
         animationRef.current = requestAnimationFrame(animate);
       } else {
-        // Complete spin
+        // Spin finished
+        currentYRef.current = targetY;
         setIsSpinning(false);
         setStatusText("WINNER!");
         setTokens((t) => t + 15);
         setWinningGame(chosen);
-        rouletteAudio.playWinChime();
+
+        try {
+          rouletteAudio.playWinChime();
+        } catch {
+          // ignore
+        }
 
         setDiscovered((prev) => {
           if (prev.some((g) => g.slug === chosen.slug)) return prev;
@@ -88,26 +116,40 @@ export default function RouletteMachine({ games }: { games?: Game[] }) {
     };
 
     animationRef.current = requestAnimationFrame(animate);
-  }, [isSpinning, rouletteGames]);
+  }, [rouletteGames]);
 
-  // Keyboard shortcut: Spacebar to spin
+  // Spacebar keyboard listener: does NOT cancel running animations on re-render
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space" && e.target === document.body && !isSpinning) {
+      if (e.code === "Space" && e.target === document.body) {
         e.preventDefault();
-        spin();
+        if (!isSpinningRef.current) {
+          spin();
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isSpinning, spin]);
+  }, [spin]);
+
+  // Cancel animation on component unmount ONLY
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   const toggleSound = () => {
     const next = !muted;
-    rouletteAudio.setMuted(next);
+    try {
+      rouletteAudio.setMuted(next);
+    } catch {
+      // ignore
+    }
     setMuted(next);
   };
 

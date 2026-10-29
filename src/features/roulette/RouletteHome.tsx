@@ -19,3 +19,4 @@ export default function RouletteHome({ games }: PagePartProps) {
     </section>
   );
 }
+

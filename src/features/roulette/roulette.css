@@ -87,6 +87,7 @@
   margin: 0 auto;
   display: flex;
   justify-content: center;
+  padding-right: 36px;
 }
 
 .slot-cabinet {
@@ -244,7 +245,7 @@
 /* Mechanical pull lever (desktop fine pointer) */
 .lever-assembly {
   position: absolute;
-  right: -36px;
+  right: 0;
   top: 60px;
   width: 36px;
   height: 150px;
@@ -252,7 +253,7 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  z-index: 1;
+  z-index: 10;
 }
 
 .lever-base {
@@ -551,6 +552,9 @@
 
 /* Responsive */
 @media (max-width: 760px) {
+  .machine-wrapper {
+    padding-right: 0;
+  }
   .lever-assembly {
     display: none;
   }
@@ -575,3 +579,4 @@
     align-items: flex-start;
   }
 }
+
